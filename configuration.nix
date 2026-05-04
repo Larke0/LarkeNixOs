@@ -16,9 +16,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
-  #boot.kernelPackages = inputs.nix-cachyos-kernel.legacyPackages.x86_64-linux.linuxPackages-cachyos-latest;
 
-  
  
   boot.plymouth = {
     enable = true;
@@ -338,12 +336,6 @@
 
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
-    substituters = [ 
-      "https://nix-cachyos-kernel.cachix.org" 
-    ];
-    trusted-public-keys = [
-      "nix-cachyos-kernel.cachix.org-1:jRxrBiKdCMFhkOBvNgp9bBF+jBqhUVSHcJMuNkMgwu0="
-    ];
   };
 
 
