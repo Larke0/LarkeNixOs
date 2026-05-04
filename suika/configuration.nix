@@ -3,8 +3,11 @@
 {
   networking.hostName = "suika";
 
+
   # Nvidia + Intel hybrid GPU
   services.xserver.videoDrivers = [ "nvidia" ];
+
+
 
   hardware.nvidia = {
     modesetting.enable = true;
@@ -24,8 +27,8 @@
 
   hardware.graphics.extraPackages = with pkgs; [
     intel-media-driver
-    vaapiIntel
-    vaapiVdpau
+    intel-vaapi-driver
+    libva-vdpau-driver
     libvdpau-va-gl
   ];
 
@@ -88,10 +91,20 @@
     "vm.swappiness" = 60;
   };
 
+  environment.sessionVariables = {
+    WLR_NO_HARDWARE_CURSORS = "1";
+    LIBVA_DRIVER_NAME = "nvidia";
+    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+    GBM_BACKEND = "nvidia_drm";
+  };
+
   boot.kernelParams = [
     "i915.enable_psr=1"       # Intel panel self-refresh
     "i915.enable_fbc=1"       # framebuffer compression
     "iwlwifi.power_save=1"    # Intel wifi power save
+
+    "nvidia-drm.modeset=1"
+    "nvidia-drm.fbdev=1"
   ];
 
   # Touchpad
