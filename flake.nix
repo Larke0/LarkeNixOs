@@ -44,6 +44,7 @@
         ./${hostname}/hardware-configuration.nix
         ./configuration.nix
         ./${hostname}/configuration.nix
+        ./modules/conda.nix
         home-manager.nixosModules.home-manager
         {
           home-manager = {

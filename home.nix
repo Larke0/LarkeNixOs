@@ -18,7 +18,7 @@
             starship module character
         end
         enable_transience
-        hyfetch -b fastfetch
+        #hyfetch -b fastfetch
         set -g fish_greeting
     '';
     functions = {
