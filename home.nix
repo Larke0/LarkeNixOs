@@ -26,11 +26,12 @@
     }; 
 		shellAliases = {
 			btw = "echo I use nixos, btw";
-			rebuild = "sudo nixos-rebuild switch --flake /etc/nixos#kohaku";
+      rebuild = "sudo nixos-rebuild switch --flake /etc/nixos#(hostname)";
       set-wallpaper = "~/.config/quickshell/scripts/set-wallpaper.sh";
       sync-dots = "cd ~/Larke-shell && ${pkgs.git}/bin/git fetch --all && ${pkgs.git}/bin/git reset --hard origin/main && find ~/Larke-shell -name '*.sh' -exec sed -i 's|#!/bin/bash|#!/usr/bin/env bash|g' {} \\; && find ~/Larke-shell -name '*.sh' -exec chmod +x {} \\;";
       push-dots = "cd ~/Larke-shell && git add -A && git commit -m 'update dots' && git push";
       zen-browser = "zen";
+      ngit = "sudo GIT_SSH_COMMAND='ssh -i /home/larke/.ssh/id_ed25519' git -C /etc/nixos";
 		};
 	};
 	

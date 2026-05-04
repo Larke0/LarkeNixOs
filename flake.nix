@@ -30,33 +30,39 @@
     };
 	};
 
-	outputs = inputs@{ self, nixpkgs, home-manager, nix-flatpak, ... }: {
-		nixosConfigurations.kohaku = nixpkgs.lib.nixosSystem {
-			system = "x86_64-linux";
-			specialArgs = { 
-        inherit inputs; 
-        pkgs-unstable = import inputs.nixpkgs-unstable { 
-          system = "x86_64-linux"; 
-          config.allowUnfree = true; 
-        };
-      };
-			modules = [
-        ./kohaku/hardware-configuration.nix
-				./configuration.nix
-				home-manager.nixosModules.home-manager
-				{
-					home-manager = {
-						useGlobalPkgs = true;
-						useUserPackages = true;
-						users.larke = import ./home.nix;
-						backupFileExtension = "backup";
-						extraSpecialArgs = { inherit inputs; };
+  outputs = inputs@{ self, nixpkgs, home-manager, nix-flatpak, ... }:
+  let
+    system = "x86_64-linux";
+    pkgs-unstable = import inputs.nixpkgs-unstable {
+      inherit system;
+      config.allowUnfree = true;
+    };
+    mkHost = hostname: nixpkgs.lib.nixosSystem {
+      inherit system;
+      specialArgs = { inherit inputs pkgs-unstable; };
+      modules = [
+        ./${hostname}/hardware-configuration.nix
+        ./configuration.nix
+        ./${hostname}/configuration.nix
+        home-manager.nixosModules.home-manager
+        {
+          home-manager = {
+            useGlobalPkgs = true;
+            useUserPackages = true;
+            users.larke = import ./home.nix;
+            backupFileExtension = "backup";
+            extraSpecialArgs = { inherit inputs; };
             sharedModules = [
-                inputs.nix-flatpak.homeManagerModules.nix-flatpak
+              inputs.nix-flatpak.homeManagerModules.nix-flatpak
             ];
-					};
-				}
-			];
-		};
-	};
+          };
+        }
+      ];
+    };
+  in {
+    nixosConfigurations = {
+      kohaku = mkHost "kohaku";
+      suika  = mkHost "suika";
+    };
+  };
 }

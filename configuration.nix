@@ -49,7 +49,6 @@
   ### NETWORKING  ###
   ###################
 
-  networking.hostName = "kohaku";
   networking.networkmanager.enable = true;
 
   ###################
@@ -214,35 +213,6 @@
   ### GAMING      ###
   ###################
 
-  # Proper gamemode setup via NixOS module (replaces the package in environment.systemPackages)
-  programs.gamemode = {
-    enable = true;
-    enableRenice = true;
-    settings = {
-      general = {
-        renice = 10;
-        softrealtime = "auto";
-        inhibit_screensaver = 1;
-      };
-      gpu = {
-        apply_gpu_optimisations = "accept-responsibility";
-        gpu_device = 0;
-      };
-      cpu = {
-        park_cores = "no";
-        pin_cores = "yes";
-      };
-    };
-  };
-
-  # Power profiles daemon — switches to performance during gaming
-  services.power-profiles-daemon.enable = true;
-
-  # Better kernel parameters for gaming
-  boot.kernel.sysctl = {
-    "vm.swappiness" = 10;
-    "vm.compaction_proactiveness" = 0;
-  };
 
   # Proton-GE support
   environment.sessionVariables = {
