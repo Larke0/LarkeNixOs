@@ -293,6 +293,9 @@
     bluez-tools
     bluetuith
 
+    #Network
+    networkmanagerapplet
+
     # Virtualization
     virt-manager
     qemu
