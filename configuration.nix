@@ -309,8 +309,9 @@
     protonvpn-gui
     wireguard-tools
 
-    # Other
+    # Coding
     claude-code
+    gh
   ]) ++ [
     inputs.helium.packages.${pkgs.system}.default
     inputs.zen-browser.packages.${pkgs.system}.default

@@ -45,6 +45,7 @@
         ./configuration.nix
         ./${hostname}/configuration.nix
         ./modules/conda.nix
+        ./modules/quartus.nix
         home-manager.nixosModules.home-manager
         {
           home-manager = {
