@@ -125,4 +125,7 @@
   environment.systemPackages = (with pkgs; [
     powertop
   ]); 
+
+
+  programs.quartus.enable = true;
 }
