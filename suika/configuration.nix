@@ -116,4 +116,8 @@
       disableWhileTyping = false;
     };
   };
+
+  environment.systemPackages = (with pkgs; [
+    powertop
+  ]); 
 }
