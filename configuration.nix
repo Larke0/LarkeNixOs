@@ -308,6 +308,13 @@
     yt-dlp
     protonvpn-gui
     wireguard-tools
+    zathura
+    (texlive.combine {
+      inherit (texlive)
+      scheme-medium
+      latexmk
+      ;
+     })
 
     # Coding
     claude-code
