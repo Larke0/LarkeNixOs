@@ -1,5 +1,6 @@
-{ pkgs, ... }:
+{ pkgs, lib, config, ... }:
 let
+  cfg = config.programs.quartus;
   libs = with pkgs.pkgsi686Linux; [
     libpng12
     freetype
@@ -30,7 +31,7 @@ let
     name = "quartus";
     desktopName = "Quartus II";
     exec = "${quartus}/bin/quartus";
-    icon = "quartus";
+    icon = "/home/larke/.altera/13.0sp1/quartus/adm/quartusii.png";
     comment = "Quartus II Web Edition 13.0";
     categories = [ "Development" "Electronics" ];
   };
