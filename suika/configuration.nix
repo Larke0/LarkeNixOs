@@ -124,6 +124,5 @@
 
   environment.systemPackages = (with pkgs; [
     powertop
-    cbatticon
   ]); 
 }
