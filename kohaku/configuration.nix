@@ -41,4 +41,6 @@
   # Desktop-only packages
   environment.systemPackages = with pkgs; [
   ];
+
+  programs.quartus.enable = true;
 }
