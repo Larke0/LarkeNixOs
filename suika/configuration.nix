@@ -25,6 +25,10 @@
     };
   };
 
+  boot.extraModprobeConfig = ''
+    options nvidia NVreg_DynamicPowerManagement=0x02
+  '';
+
   hardware.graphics.extraPackages = with pkgs; [
     intel-media-driver
     intel-vaapi-driver
@@ -93,9 +97,10 @@
 
   environment.sessionVariables = {
     WLR_NO_HARDWARE_CURSORS = "1";
-    LIBVA_DRIVER_NAME = "nvidia";
-    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-    GBM_BACKEND = "nvidia_drm";
+    LIBVA_DRIVER_NAME = "iHD";
+    #LIBVA_DRIVER_NAME = "nvidia";
+    #__GLX_VENDOR_LIBRARY_NAME = "nvidia";
+    #GBM_BACKEND = "nvidia_drm";
   };
 
   boot.kernelParams = [
@@ -119,5 +124,6 @@
 
   environment.systemPackages = (with pkgs; [
     powertop
+    cbatticon
   ]); 
 }
