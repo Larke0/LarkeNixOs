@@ -95,9 +95,6 @@
     ${pkgs.glib}/bin/gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
     ${pkgs.glib}/bin/gsettings set org.gnome.desktop.interface cursor-theme 'Bibata-Modern-Classic'
     ${pkgs.glib}/bin/gsettings set org.gnome.desktop.interface cursor-size 24
-
-
-    ${pkgs.flatpak}/bin/flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 	'';
 
 
@@ -145,9 +142,6 @@
 
   services.flatpak = {
     enable = true;
-    remotes = [
-        { name = "flathub"; location = "https://flathub.org/repo/flathub.flatpakrepo"; }
-    ];
     packages = [
         "io.github.kolunmi.Bazaar"
     ];
