@@ -58,7 +58,7 @@
 
 		# Sync configs
     # For dirs that are fully managed, symlink the whole folder
-    for dir in quickshell nvim matugen kitty fastfetch rofi qt6ct Kvantum; do
+    for dir in quickshell nvim matugen kitty fastfetch rofi qt6ct Kvantum btop; do
       rm -rf "$HOME/.config/$dir"
       ln -sfn "$HOME/Larke-shell/.config/$dir" "$HOME/.config/$dir"
     done
