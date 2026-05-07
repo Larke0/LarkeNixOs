@@ -198,7 +198,7 @@
   services.tailscale.enable = true;
   services.udisks2.enable = true;
 
-  
+  programs.hydra-launcher.enable = true; 
 
   # programs.spicetify = {
   #   enable = true;
