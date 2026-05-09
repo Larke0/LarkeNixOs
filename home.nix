@@ -22,7 +22,7 @@
         set -g fish_greeting
     '';
     functions = {
-       calc = "sage -c $argv";
+        calc = "sage -c \"print($argv)\"";
     }; 
 		shellAliases = {
 			btw = "echo I use nixos, btw";

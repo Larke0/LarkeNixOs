@@ -15,8 +15,8 @@
   boot.loader.systemd-boot.consoleMode = "max";
   boot.loader.efi.canTouchEfiVariables = true;
 
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-
+  #boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest;
  
   boot.plymouth = {
     enable = true;
@@ -217,7 +217,11 @@
     STEAM_EXTRA_COMPAT_TOOLS_PATHS = "~/.steam/root/compatibilitytools.d";
   };
 
-
+  services.ananicy = {
+    enable = true;
+    package = pkgs.ananicy-cpp;
+    rulesProvider = pkgs.ananicy-rules-cachyos;
+  };
 
   ###################
   ### PACKAGES    ###
@@ -229,7 +233,7 @@
     wget
     git
     kitty
-    rofi
+    (rofi.override { plugins = [ rofi-calc ]; })
     libnotify
     jq
     tpm2-tools
@@ -339,7 +343,8 @@
   ###################
   ### NIX         ###
   ###################
-  
+ 
+  nixpkgs.overlays = [ inputs.nix-cachyos-kernel.overlays.pinned ];
  
   system.activationScripts.flatpakSetup = ''
     ${pkgs.flatpak}/bin/flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
@@ -348,6 +353,12 @@
 
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
+    substituters = [
+      "https://attic.xuyh0120.win/lantian"
+    ];
+    trusted-public-keys = [
+      "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
+    ];
   };
 
 

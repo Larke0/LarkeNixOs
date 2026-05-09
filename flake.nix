@@ -6,6 +6,7 @@
     nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
     nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=v0.7.0";
     hydra-launcher.url = "path:/etc/nixos/modules/hydra-launcher";
+    nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
     helium = {
       url = "github:AlvaroParker/helium-nix";
       inputs.nixpkgs.follows = "nixpkgs";
