@@ -34,7 +34,7 @@
     "udev.log_priority=3"
     "video=1920x1080@60"
     "usbcore.autosuspend=-1"
-    "usbcore.old_scheme_first=1"
+    #"usbcore.old_scheme_first=1"
   ];
 
   boot.consoleLogLevel = 0;
