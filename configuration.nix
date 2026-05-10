@@ -249,6 +249,7 @@
     gcc
     adw-gtk3
     sage
+    psmisc
 
     # Shell
     starship
