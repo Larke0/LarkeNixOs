@@ -215,6 +215,8 @@
         adblock
         hidePodcasts
         shuffle
+        catJamSynced
+        beautifulLyrics
       ];
       enabledCustomApps = with spicePkgs.apps; [
         newReleases
@@ -225,8 +227,7 @@
         pointer
       ];
 
-      theme = spicePkgs.themes.catppuccin;
-      colorScheme = "mocha";
+      theme = spicePkgs.themes.dribbblishDynamic;
   };
 }
 

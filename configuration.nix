@@ -33,8 +33,8 @@
     "rd.udev.log_level=3"
     "udev.log_priority=3"
     "video=1920x1080@60"
-    "usbcore.autosuspend=-1"
-    #"usbcore.old_scheme_first=1"
+    #"usbcore.autosuspend=-1"
+    "usbcore.old_scheme_first=1"
   ];
 
   boot.consoleLogLevel = 0;
@@ -266,10 +266,10 @@
     swappy
     grim
     slurp
+    grimblast
     nautilus
     xdg-desktop-portal-hyprland
     xdg-desktop-portal-gtk
-    wayfreeze
     pwvucontrol
 
     # Theming
