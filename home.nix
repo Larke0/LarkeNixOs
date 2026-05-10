@@ -145,7 +145,62 @@
     packages = [
         "io.github.kolunmi.Bazaar"
     ];
-};
+  };
 
+  imports = [ inputs.nixcord.homeModules.nixcord ];
 
+  
+  programs.nixcord = {
+    enable = true;
+
+    discord.vencord.enable = true;      # Standard Vencord
+
+    #vesktop.enable = true;
+
+    # Theming
+    quickCss = "/* css goes here */";
+    config = {
+      useQuickCss = true;
+      themeLinks = [
+        "https://capnkitten.github.io/BetterDiscord/Themes/Material-Discord/css/source.css"
+      ];
+      frameless = true;
+
+      plugins = {
+        betterGifPicker.enable = true;
+        favoriteGifSearch.enable = true;
+        gifPaste.enable = true;
+        petpet.enable = true;
+        imageZoom.enable = true;
+        betterGifAltText.enable = true;
+        callTimer.enable = true;
+        copyEmojiMarkdown.enable = true;
+        crashHandler.enable = true;
+        disableCallIdle.enable = true;
+        fixImagesQuality.enable = true;
+        fixSpotifyEmbeds.enable = true;
+        fixYoutubeEmbeds.enable = true;
+        friendsSince.enable = true;
+        fullSearchContext.enable = true;
+        gameActivityToggle.enable = true;
+        greetStickerPicker.enable = true;
+        mentionAvatars.enable = true;
+        messageLogger.enable = true;
+        noF1.enable = true;
+        notificationVolume.enable = true;
+        OnePingPerDM.enable = true;
+        openInApp.enable = true;
+        silentTyping.enable = true;
+        spotifyControls.enable = true;
+        spotifyCrack.enable = true;
+        translate.enable = true;
+        volumeBooster.enable = true;
+        voiceMessages.enable = true;
+        youtubeAdblock.enable = true;
+      };
+    };
+  };
 }
+
+
+

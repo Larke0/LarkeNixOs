@@ -207,6 +207,13 @@
   #   spotifyPackage = pkgs.spotify;
   # };
 
+  services.earlyoom = {
+    enable = true;
+    freeMemThreshold = 5;    # Kill at 5% remaining RAM
+    freeSwapThreshold = 5;   # Kill at 5% remaining Swap
+    enableNotifications = true; # Sends a desktop notification when a process is killed
+  };
+
   ###################
   ### GAMING      ###
   ###################

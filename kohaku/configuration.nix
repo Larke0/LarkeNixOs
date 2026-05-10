@@ -11,7 +11,7 @@
     enableRenice = true;
     settings = {
       general = {
-        renice = 10;
+        renice = -10;
         softrealtime = "auto";
         inhibit_screensaver = 1;
       };
@@ -21,7 +21,7 @@
       };
       cpu = {
         park_cores = "no";
-        pin_cores = "yes";
+        pin_cores = "no";
       };
     };
   };
@@ -32,12 +32,11 @@
 
   # KERNEL BOOT PARAMETERS
   boot.kernelParams = [
-    "amd-pstate=passive"
+    "amd-pstate=active"
     "amdgpu.aspm=0"
     "amdgpu.audio=0"
     "nmi_watchdog=0"
     "nowatchdog"
-    "processor.max_cstate=1"
     "transparent_hugepage=never"
     "vm.zone_reclaim_mode=0"
     "audit=0"
@@ -91,6 +90,8 @@
     "kernel.kptr_restrict" = 1;
   };
 
+
+  hardware.ksm.enable = true;
 
   # Use LAVD scheduler
   services.scx = {

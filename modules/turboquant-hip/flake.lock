@@ -1,0 +1,45 @@
+{
+  "nodes": {
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1777954456,
+        "narHash": "sha256-hGdgeU2Nk87RAuZyYjyDjFL6LK7dAZN5RE9+hrDTkDU=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "549bd84d6279f9852cae6225e372cc67fb91a4c1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "nixpkgs": "nixpkgs",
+        "turboquant-src": "turboquant-src"
+      }
+    },
+    "turboquant-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1775718013,
+        "narHash": "sha256-7J2j/UzNLeQZNKg69eVhk+cvA0x6AGVUplpYgoJVXDk=",
+        "owner": "domvox",
+        "repo": "llama.cpp-turboquant-hip",
+        "rev": "11aced9b7379dc095cd63ff65f5309d4ebdbbf4c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "domvox",
+        "ref": "feature/turboquant-hip-port-clean",
+        "repo": "llama.cpp-turboquant-hip",
+        "type": "github"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
