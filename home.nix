@@ -156,7 +156,10 @@
   programs.nixcord = {
     enable = true;
 
-    discord.vencord.enable = true;      # Standard Vencord
+    discord = {
+      vencord.enable = true;
+      openASAR.enable = true;
+    };
 
     #vesktop.enable = true;
 

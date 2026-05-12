@@ -252,6 +252,7 @@
     adw-gtk3
     sage
     psmisc
+    amdgpu_top
 
     # Shell
     starship
