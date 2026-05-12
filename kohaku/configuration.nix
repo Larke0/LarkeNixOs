@@ -34,11 +34,9 @@
   boot.kernelParams = [
     "amd-pstate=active"
     "amdgpu.aspm=0"
-    "amdgpu.audio=0"
     "nmi_watchdog=0"
     "nowatchdog"
     "transparent_hugepage=never"
-    "vm.zone_reclaim_mode=0"
     "audit=0"
     "pcie_aspm=off"
     "ignore_rlimit_data"
@@ -91,7 +89,6 @@
   };
 
 
-  hardware.ksm.enable = true;
 
   # Use LAVD scheduler
   services.scx = {
@@ -104,7 +101,47 @@
 
   # Desktop-only packages
   environment.systemPackages = with pkgs; [
+    (llama-cpp.override { vulkanSupport = true; })
   ];
 
   programs.quartus.enable = true;
+
+  services.ollama = {
+    enable = true;
+    # Tell the service to use the specific Vulkan-enabled build
+    package = pkgs-unstable.ollama-vulkan;
+  };
+
+   # Ensure the ollama user can access the hardware
+  users.groups.render.members = [ "ollama" ];
+  users.groups.video.members = [ "ollama" ];
+
+  services.open-webui = {
+    enable = true;
+    port = 8080; 
+    environment = {
+      OLLAMA_API_BASE_URL = "http://127.0.0.1:11434";
+      
+      # Tell Open WebUI to allow web search
+      ENABLE_RAG_WEB_SEARCH = "True";
+      RAG_WEB_SEARCH_ENGINE = "searxng";
+      RAG_WEB_SEARCH_RESULT_COUNT = "3";
+      SEARXNG_QUERY_URL = "http://127.0.0.1:8081/search?q=<query>";
+    };
+  };
+
+  services.searx = {
+    enable = true;
+    settings = {
+      server = {
+        port = 8081;
+        bind_address = "127.0.0.1";
+        secret_key = "b013d6db3368b9c091fd2c8c923d400a63db4236834c16d2ee7eb9101043c0bc";
+      };
+      search = {
+        # JSON format is required for the LLM to parse the results
+        formats = [ "html" "json" ]; 
+      };
+    };
+  };
 }

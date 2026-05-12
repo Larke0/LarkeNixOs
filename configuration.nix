@@ -33,7 +33,7 @@
     "rd.udev.log_level=3"
     "udev.log_priority=3"
     "video=1920x1080@60"
-    #"usbcore.autosuspend=-1"
+    "usbcore.autosuspend=-1"
     "usbcore.old_scheme_first=1"
   ];
 
@@ -108,6 +108,8 @@
   ###################
   ### SOUND       ###
   ###################
+
+  security.rtkit.enable = true;
 
   services.pipewire = {
     enable = true;
@@ -354,7 +356,14 @@
   ### NIX         ###
   ###################
  
-  nixpkgs.overlays = [ inputs.nix-cachyos-kernel.overlays.pinned ];
+  nixpkgs.overlays = [ 
+    (final: prev: {
+      valkey = prev.valkey.overrideAttrs (oldAttrs: {
+        doCheck = false;
+      });
+    })
+    inputs.nix-cachyos-kernel.overlays.pinned 
+  ];
  
   system.activationScripts.flatpakSetup = ''
     ${pkgs.flatpak}/bin/flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo

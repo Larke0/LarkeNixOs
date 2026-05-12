@@ -194,7 +194,6 @@
         OnePingPerDM.enable = true;
         openInApp.enable = true;
         silentTyping.enable = true;
-        spotifyControls.enable = true;
         spotifyCrack.enable = true;
         translate.enable = true;
         volumeBooster.enable = true;
