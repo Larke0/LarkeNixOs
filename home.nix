@@ -1,6 +1,32 @@
 #VERSION 9 
 
-{config, pkgs, inputs, ... }:
+{config, pkgs, inputs, lib, ... }:
+
+
+
+let
+  # Define your lists of common MIME types
+  videoTypes = [
+    "video/mp4"
+    "video/x-matroska" # .mkv
+    "video/webm"
+    "video/quicktime"  # .mov
+    "video/x-msvideo"  # .avi
+    "video/x-flv"
+    "video/ogg"
+  ];
+
+  imageTypes = [
+    "image/png"
+    "image/jpeg" # .jpg / .jpeg
+    "image/gif"
+    "image/webp"
+    "image/svg+xml"
+    "image/bmp"
+    "image/tiff"
+  ];
+in
+
 {
 	home.username = "larke";
 	home.homeDirectory = "/home/larke";
@@ -101,7 +127,10 @@
   
   xdg.mimeApps = {
     enable = true;
-    defaultApplications = {
+    defaultApplications = 
+    (lib.genAttrs videoTypes (_: "org.kde.haruna.desktop")) //
+    (lib.genAttrs imageTypes (_: "org.kde.gwenview.desktop")) // 
+    {
       "inode/directory" = "org.gnome.Nautilus.desktop";
       "text/plain" = "nvim-kitty.desktop";
       "x-scheme-handler/http" = "helium.desktop";

@@ -33,8 +33,8 @@
     "rd.udev.log_level=3"
     "udev.log_priority=3"
     "video=1920x1080@60"
-    "usbcore.autosuspend=-1"
-    "usbcore.old_scheme_first=1"
+    #"usbcore.autosuspend=-1"
+    #"usbcore.old_scheme_first=1"
   ];
 
   boot.consoleLogLevel = 0;
@@ -125,6 +125,12 @@
         "default.clock.min-quantum" = 1024;
         "default.clock.max-quantum" = 4096;
       };
+    };
+  };
+
+  systemd.user.services.wireplumber = {
+    serviceConfig = {
+      ExecStartPre = "${pkgs.coreutils}/bin/sleep 5";
     };
   };
 
@@ -264,6 +270,7 @@
     sage
     psmisc
     amdgpu_top
+    file
 
     # Shell
     starship
@@ -316,8 +323,8 @@
     lutris
     obs-studio
     gamemode
-    xivlauncher
     protonup-qt
+    xivlauncher
 
     # Bluetooth
     bluez-tools

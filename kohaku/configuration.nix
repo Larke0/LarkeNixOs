@@ -102,6 +102,7 @@
   # Desktop-only packages
   environment.systemPackages = with pkgs; [
     (llama-cpp.override { vulkanSupport = true; })
+    wtype
   ];
 
   programs.quartus.enable = true;
