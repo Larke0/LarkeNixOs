@@ -1,11 +1,20 @@
-#VERSION 9 
+# =============================================================================
+# HOME MANAGER CONFIGURATION (home.nix)
+# =============================================================================
+# Version Tracker: VERSION 10
+# This file manages user-level environment, dotfiles, and applications 
+# declaratively. Updates take effect via your 'rebuild' shell alias.
+# =============================================================================
 
-{config, pkgs, inputs, lib, ... }:
-
-
+{ config, pkgs, inputs, lib, ... }:
 
 let
-  # Define your lists of common MIME types
+  # ---------------------------------------------------------------------------
+  # Local Variables & Helper Functions (Let Block)
+  # ---------------------------------------------------------------------------
+  
+  # Lists of common media MIME types used to batch-assign default applications
+  # instead of writing a repetitive line for every single file extension.
   videoTypes = [
     "video/mp4"
     "video/x-matroska" # .mkv
@@ -18,118 +27,184 @@ let
 
   imageTypes = [
     "image/png"
-    "image/jpeg" # .jpg / .jpeg
+    "image/jpeg"        # .jpg / .jpeg
     "image/gif"
     "image/webp"
     "image/svg+xml"
     "image/bmp"
     "image/tiff"
   ];
+
+  # Short helper alias for generating out-of-store symbolic links.
+  # This tells Home Manager to link directly to your local repository rather than 
+  # copying files into the immutable, read-only Nix store (/nix/store).
+  # Crucial for live-editing dotfiles without needing a full system rebuild.
+  link = config.lib.file.mkOutOfStoreSymlink;
+
+  # Absolute path to your tracked dotfiles git repository.
+  repo = "${config.home.homeDirectory}/Larke-shell";
 in
 
 {
-	home.username = "larke";
-	home.homeDirectory = "/home/larke";
-	home.stateVersion = "25.11";
+  # ---------------------------------------------------------------------------
+  # User Profile & Environment Core
+  # ---------------------------------------------------------------------------
+  home.username = "larke";
+  home.homeDirectory = "/home/larke";
+  
+  # Home Manager Release Version. This ensures backwards compatibility with internal 
+  # module changes. Do not change unless you intend to migrate your state files.
+  home.stateVersion = "25.11";
+  
+  # ---------------------------------------------------------------------------
+  # Core Applications & Shell Configurations
+  # ---------------------------------------------------------------------------
+
+  # Declarative Git configuration for user tracking
   programs.git = {
     enable = true;
     settings.user.name = "Larke0";
     settings.user.email = "larke850@gmail.com";
   };
-	programs.fish = {
-		enable = true;
+  
+  # Fish Shell Configuration
+  programs.fish = {
+    enable = true;
+    
+    # Logic loaded into every interactive terminal session
     interactiveShellInit = ''
+        # Initialize and load Starship prompt styling
         starship init fish | source
+        
+        # Enable transient prompt support (hides old prompts upon hitting enter 
+        # to maximize terminal vertical scannability)
         function starship_transient_prompt_func
             starship module character
         end
         enable_transience
-        #hyfetch -b fastfetch
+        
+        # Mute the default greeting banner for a clean look
         set -g fish_greeting
     '';
+    
+    # Custom functions that behave like scripts but compile natively in shell memory
     functions = {
+        # Quick inline terminal calculator using SageMath
         calc = "sage -c \"print($argv)\"";
     }; 
-		shellAliases = {
-			btw = "echo I use nixos, btw";
+    
+    # Terminal shorthand commands mapped to long utilities
+    shellAliases = {
+      btw = "echo I use nixos, btw";
+      
+      # Rebuild and apply the entire system configuration profile from your local flake setup
       rebuild = "sudo nixos-rebuild switch --flake /etc/nixos#(hostname)";
+      
+      # Execute custom theme-compliant wallpaper daemon script
       set-wallpaper = "~/.config/quickshell/scripts/set-wallpaper.sh";
+      
+      # Hard reset local repo with GitHub's main branch, fix shebangs to match Nix runtime path standards, and make runnable
       sync-dots = "cd ~/Larke-shell && ${pkgs.git}/bin/git fetch --all && ${pkgs.git}/bin/git reset --hard origin/main && find ~/Larke-shell -name '*.sh' -exec sed -i 's|#!/bin/bash|#!/usr/bin/env bash|g' {} \\; && find ~/Larke-shell -name '*.sh' -exec chmod +x {} \\;";
+      
+      # Stages all untracked file changes inside dotfiles directory, commits, and pushes them safely to GitHub
       push-dots = "cd ~/Larke-shell && git add -A && git commit -m 'update dots' && git push";
+      
       zen-browser = "zen";
+      
+      # Wrapper to handle system-level Git updates inside the restricted /etc/nixos profile utilizing your secure user SSH keys
       ngit = "sudo GIT_SSH_COMMAND='ssh -i /home/larke/.ssh/id_ed25519' git -C /etc/nixos";
-		};
-	};
-	
-	
-	home.activation.cloneDotfiles = config.lib.dag.entryAfter [ "writeBoundary" ] ''
-		if [ ! -d "$HOME/Larke-shell" ]; then
-			${pkgs.git}/bin/git clone https://github.com/Larke0/Larke-shell "$HOME/Larke-shell"
-		else
-			cd "$HOME/Larke-shell" && ${pkgs.git}/bin/git fetch --all && ${pkgs.git}/bin/git reset --hard origin/main || echo "GIT PULL FAILED" 
-		fi
-		
+    };
+  };
+  
+  # ---------------------------------------------------------------------------
+  # Declarative XDG Config Symlinking (The Native Nix Way)
+  # ---------------------------------------------------------------------------
+  # Home Manager directly maps these definitions to path targets in ~/.config. 
+  # Old/dead entries are tracked, safely deleted, and handled automatically.
+  xdg.configFile = {
+    # Full Desktop/Terminal Environments Managed Directly
+    "quickshell".source = link "${repo}/.config/quickshell";
+    "nvim".source       = link "${repo}/.config/nvim";
+    "matugen".source    = link "${repo}/.config/matugen";
+    "kitty".source      = link "${repo}/.config/kitty";
+    "fastfetch".source  = link "${repo}/.config/fastfetch";
+    "rofi".source       = link "${repo}/.config/rofi";
+    "qt6ct".source      = link "${repo}/.config/qt6ct";
+    "Kvantum".source    = link "${repo}/.config/Kvantum";
+    "btop".source       = link "${repo}/.config/btop";
 
-		find "$HOME/Larke-shell/" -name "*.sh" -exec sed -i 's|#!/bin/bash|#!/usr/bin/env bash|g' {} \;
+    # Hyprland Window Manager Architecture Modules
+    "hypr/hyprland".source      = link "${repo}/.config/hypr/hyprland";
+    "hypr/scripts".source       = link "${repo}/.config/hypr/scripts";
+    "hypr/GameWorkspace".source = link "${repo}/.config/hypr/GameWorkspace";
 
+    # Hyprland Root Core Configuration Files (Swapped to Lua)
+    "hypr/hyprland.lua".source  = link "${repo}/.config/hypr/hyprland.lua";
+    "hypr/hypridle.conf".source = link "${repo}/.config/hypr/hypridle.conf";
+    "hypr/hyprlock.conf".source = link "${repo}/.config/hypr/hyprlock.conf";
+    "hypr/xdph.conf".source     = link "${repo}/.config/hypr/xdph.conf";
+    "hypr/custom/hyprland.lua.example".source = link "${repo}/.config/hypr/custom/hyprland.lua.example";
+
+    # Desktop Toolkits Style Standard Overrides (GTK Theme Settings)
+    "gtk-3.0/settings.ini".source = link "${repo}/.config/gtk-3.0/settings.ini";
+    "gtk-4.0/settings.ini".source = link "${repo}/.config/gtk-4.0/settings.ini";
+    
+    # Starship Shell Prompt Configuration
+    "starship.toml".source = link "${repo}/.config/starship.toml";
+  };
+
+  # ---------------------------------------------------------------------------
+  # Desktop Environment & Theme Settings (Gsettings / Dconf)
+  # ---------------------------------------------------------------------------
+  # Sets environment settings natively into the user's dconf database layout,
+  # ensuring GTK apps fall back correctly onto dark styles and uniform assets.
+  dconf.settings = {
+    "org/gnome/desktop/interface" = {
+      gtk-theme = "adw-gtk3-dark";
+      color-scheme = "prefer-dark";
+      icon-theme = "Papirus-Dark";
+      cursor-theme = "Bibata-Modern-Classic";
+      cursor-size = lib.hm.gvariant.mkInt32 24; # Explicitly typed 32-bit integer for GNOME API compatibility
+    };
+  };
+  
+  # ---------------------------------------------------------------------------
+  # Imperative Activation Scripts (Fallback Hooks)
+  # ---------------------------------------------------------------------------
+  # Runs after the configuration state has been calculated and written (`writeBoundary`).
+  # This hook handles items that *must* execute directly on the actual file system, 
+  # such as cloning networks or preparing placeholder tracking logs.
+  home.activation.cloneDotfiles = config.lib.dag.entryAfter [ "writeBoundary" ] ''
+    # Bootstrapping: Clone your dotfiles repository if a clean install is detected
+    if [ ! -d "$HOME/Larke-shell" ]; then
+      ${pkgs.git}/bin/git clone https://github.com/Larke0/Larke-shell "$HOME/Larke-shell"
+    else
+      # Pull fresh files to verify configuration sync matches upstream master repository
+      cd "$HOME/Larke-shell" && ${pkgs.git}/bin/git fetch --all && ${pkgs.git}/bin/git reset --hard origin/main || echo "GIT PULL FAILED" 
+    fi
+    
+    # Fix absolute execution schemas for portability across NixOS shell environments
+    find "$HOME/Larke-shell/" -name "*.sh" -exec sed -i 's|#!/bin/bash|#!/usr/bin/env bash|g' {} \;
     find "$HOME/Larke-shell/" -name "*.sh" -exec chmod +x {} \; 
     
-    mkdir -p "$HOME/.config/hypr"
+    # Ensure localized system configuration directories and dynamically managed theme files 
+    # exist so Hyprland components can write to them immediately upon initialization
+    mkdir -p "$HOME/.config/hypr/hyprland"
     mkdir -p "$HOME/.config/hypr/custom"
-    mkdir -p "$HOME/.config/hypr/assets"
+    touch "$HOME/.config/hypr/hyprland/theme.conf"
+    touch "$HOME/.config/hypr/custom/hyprland.conf"
+  '';
 
-    mkdir -p "$HOME/.config/gtk-3.0"
-    mkdir -p "$HOME/.config/gtk-4.0"
-
-
-		# Sync configs
-    # For dirs that are fully managed, symlink the whole folder
-    for dir in quickshell nvim matugen kitty fastfetch rofi qt6ct Kvantum btop; do
-      rm -rf "$HOME/.config/$dir"
-      ln -sfn "$HOME/Larke-shell/.config/$dir" "$HOME/.config/$dir"
-    done
-
-    # For hypr, symlink subfolders individually (skip custom/)
-    for dir in hyprland scripts GameWorkspace; do
-      rm -rf "$HOME/.config/hypr/$dir"
-      ln -sfn "$HOME/Larke-shell/.config/hypr/$dir" "$HOME/.config/hypr/$dir"
-    done
-
-    # Symlink individual hypr root files
-    for file in hyprland.conf hypridle.conf hyprlock.conf xdph.conf; do
-      ln -sfn "$HOME/Larke-shell/.config/hypr/$file" "$HOME/.config/hypr/$file"
-    done
-
-    # Link starship.toml
-    ln -sfn "$HOME/Larke-shell/.config/starship.toml" "$HOME/.config/starship.toml"
-
-    # For gtk, just symlink the settings files :3
-    mkdir -p "$HOME/.config/gtk-3.0" "$HOME/.config/gtk-4.0"
-    ln -sfn "$HOME/Larke-shell/.config/gtk-3.0/settings.ini" "$HOME/.config/gtk-3.0/settings.ini"
-    ln -sfn "$HOME/Larke-shell/.config/gtk-4.0/settings.ini" "$HOME/.config/gtk-4.0/settings.ini"
-
-    # Also link the hyprland.conf.example:
-    ln -sfn "$HOME/Larke-shell/.config/hypr/custom/hyprland.conf.example" "$HOME/.config/hypr/custom/hyprland.conf.example"
-
-    touch ~/.config/hypr/hyprland/theme.conf ~/.config/hypr/custom/hyprland.conf
-
-    
-    # GTK settings
-    export GSETTINGS_SCHEMA_DIR="${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}/glib-2.0/schemas"
-    ${pkgs.glib}/bin/gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3-dark'
-    ${pkgs.glib}/bin/gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
-    ${pkgs.glib}/bin/gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
-    ${pkgs.glib}/bin/gsettings set org.gnome.desktop.interface cursor-theme 'Bibata-Modern-Classic'
-    ${pkgs.glib}/bin/gsettings set org.gnome.desktop.interface cursor-size 24
-	'';
-
-
-  
+  # ---------------------------------------------------------------------------
+  # XDG Client Applications & File Associations
+  # ---------------------------------------------------------------------------
   xdg.mimeApps = {
     enable = true;
     defaultApplications = 
-    (lib.genAttrs videoTypes (_: "org.kde.haruna.desktop")) //
-    (lib.genAttrs imageTypes (_: "org.kde.gwenview.desktop")) // 
+    # 'genAttrs' takes an array of extensions and dynamically generates matching 
+    # target properties mapping them all cleanly to specific viewer desktops.
+    (lib.genAttrs videoTypes (_: "org.kde.haruna.desktop")) // # Maps all videoTypes to Haruna Media Player
+    (lib.genAttrs imageTypes (_: "org.kde.gwenview.desktop")) // # Maps all imageTypes to Gwenview Image Viewer
     {
       "inode/directory" = "org.gnome.Nautilus.desktop";
       "text/plain" = "nvim-kitty.desktop";
@@ -141,66 +216,84 @@ in
     };
   };
 
-  xdg.desktopEntries.nvim-kitty = {
-    name = "Neovim";
-    exec = "kitty nvim %F";
-    terminal = false;
-    mimeType = [ "text/plain" ];
+  # Custom app menu listings wrapper definitions (.desktop generator)
+  xdg.desktopEntries = {
+    # Custom desktop entry launcher to force Neovim to load up natively inside a Kitty instance
+    nvim-kitty = {
+      name = "Neovim";
+      exec = "kitty nvim %F";
+      terminal = false;
+      mimeType = [ "text/plain" ];
+    };
+
+    # Web app instance shorthand target grouping for YouTube Music running inside Helium
+    ytmusic = {
+      name = "Youtube Music";
+      exec = "helium --app=https://music.youtube.com/";
+      terminal = false;
+      icon = "youtube-music";
+    };
   };
 
+  # ---------------------------------------------------------------------------
+  # User Directory Standards Configuration
+  # ---------------------------------------------------------------------------
+  # Explicitly standardizes location setups for personal folders to guarantee apps 
+  # don't create unorganized directories randomly inside the primary home directory.
   xdg.userDirs = {
     enable = true;
     createDirectories = true;
-    desktop = "${config.home.homeDirectory}/Desktop";
-    documents = "${config.home.homeDirectory}/Documents";
-    download = "${config.home.homeDirectory}/Downloads";
-    music = "${config.home.homeDirectory}/Music";
-    pictures = "${config.home.homeDirectory}/Pictures";
-    videos = "${config.home.homeDirectory}/Videos";
-    templates = "${config.home.homeDirectory}/Templates";
+    desktop     = "${config.home.homeDirectory}/Desktop";
+    documents   = "${config.home.homeDirectory}/Documents";
+    download    = "${config.home.homeDirectory}/Downloads";
+    music       = "${config.home.homeDirectory}/Music";
+    pictures    = "${config.home.homeDirectory}/Pictures";
+    videos      = "${config.home.homeDirectory}/Videos";
+    templates   = "${config.home.homeDirectory}/Templates";
     publicShare = "${config.home.homeDirectory}/Public";
   };
 
-
-  xdg.desktopEntries.ytmusic = {
-    name = "Youtube Music";
-    exec = "helium --app=https://music.youtube.com/";
-    terminal = false;
-    icon = "youtube-music";
-  };
-
+  # ---------------------------------------------------------------------------
+  # Package sandboxing support structures (Flatpak Integration)
+  # ---------------------------------------------------------------------------
   services.flatpak = {
     enable = true;
     packages = [
-        "io.github.kolunmi.Bazaar"
+        "io.github.kolunmi.Bazaar" # System Flatpak app injection hook
     ];
   };
 
+  # ---------------------------------------------------------------------------
+  # Flake Extensions & External Home Manager Modules Loading
+  # ---------------------------------------------------------------------------
   imports = [
-      inputs.nixcord.homeModules.nixcord
-      inputs.spicetify-nix.homeManagerModules.default
+      inputs.nixcord.homeModules.nixcord          # Discord styling framework extension module
+      inputs.spicetify-nix.homeManagerModules.default # Spotify custom optimization client expansion module
   ];
 
-  
+  # ---------------------------------------------------------------------------
+  # Extension Module Configuration: Nixcord (Discord Setup)
+  # ---------------------------------------------------------------------------
   programs.nixcord = {
     enable = true;
-
+    
+    # Core framework settings
     discord = {
-      vencord.enable = true;
-      openASAR.enable = true;
+      vencord.enable = true;  # Enable Vencord plugin client runtime injection
+      openASAR.enable = true; # Open-source lightweight Discord client layout optimizations
     };
-
-    #vesktop.enable = true;
-
-    # Theming
+    
+    # Custom interface overrides styling insertion zone
     quickCss = "/* css goes here */";
+    
     config = {
       useQuickCss = true;
       themeLinks = [
         "https://capnkitten.github.io/BetterDiscord/Themes/Material-Discord/css/source.css"
       ];
-      frameless = true;
+      frameless = true; # Strip decoration borders off system graphical client structures
 
+      # Declarative Plugin Activation Engine Flags
       plugins = {
         betterGifPicker.enable = true;
         favoriteGifSearch.enable = true;
@@ -235,13 +328,18 @@ in
     };
   };
 
+  # ---------------------------------------------------------------------------
+  # Extension Module Configuration: Spicetify (Spotify Customization)
+  # ---------------------------------------------------------------------------
   programs.spicetify =
     let
+      # Point to package evaluation structures compiled by the spicetify flake input layer
       spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.hostPlatform.system};
     in
     {
       enable = true;
 
+      # Function patches to append directly to the target Spotify running audio instance
       enabledExtensions = with spicePkgs.extensions; [
         adblock
         hidePodcasts
@@ -249,18 +347,20 @@ in
         catJamSynced
         beautifulLyrics
       ];
+      
+      # Additional pages to register into Spotify's sidebar
       enabledCustomApps = with spicePkgs.apps; [
         newReleases
         ncsVisualizer
       ];
+      
+      # Targeted script pieces to overwrite app behavior
       enabledSnippets = with spicePkgs.snippets; [
         rotatingCoverart
         pointer
       ];
 
+      # Graphical styling template assignment selection
       theme = spicePkgs.themes.dribbblishDynamic;
   };
 }
-
-
-
