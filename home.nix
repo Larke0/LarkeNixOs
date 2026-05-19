@@ -191,8 +191,8 @@ in
     # exist so Hyprland components can write to them immediately upon initialization
     mkdir -p "$HOME/.config/hypr/hyprland"
     mkdir -p "$HOME/.config/hypr/custom"
-    touch "$HOME/.config/hypr/hyprland/theme.conf"
-    touch "$HOME/.config/hypr/custom/hyprland.conf"
+    touch "$HOME/.config/hypr/hyprland/theme.lua"
+    touch "$HOME/.config/hypr/custom/hyprland.lua"
   '';
 
   # ---------------------------------------------------------------------------
