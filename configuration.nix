@@ -15,8 +15,7 @@
   boot.loader.systemd-boot.consoleMode = "max";
   boot.loader.efi.canTouchEfiVariables = true;
 
-  #boot.kernelPackages = pkgs.linuxPackages_latest;
-  boot.kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest;
+  boot.kernelPackages = pkgs.linuxPackages_zen;
  
   boot.plymouth = {
     enable = true;
@@ -86,7 +85,7 @@
 
   programs.hyprland = {
     enable = true;
-    package = pkgs-unstable.hyprland;
+    #package = pkgs-unstable.hyprland;
     xwayland.enable = true;
   };
 
@@ -141,6 +140,8 @@
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = true;
   services.blueman.enable = true;
+
+  programs.kdeconnect.enable = true;
 
   ###################
   ### USERS       ###
@@ -339,8 +340,10 @@
     # Virtualization
     virt-manager
     qemu
-
+    
     # System utils
+    easyeffects
+    deepfilternet
     btop
     ncdu
     fd
@@ -349,6 +352,9 @@
     protonvpn-gui
     wireguard-tools
     zathura
+    awww
+    hyprlock
+    hypridle
     (texlive.combine {
       inherit (texlive)
       scheme-medium
@@ -362,9 +368,6 @@
   ]) ++ [
     inputs.helium.packages.${pkgs.system}.default
     inputs.zen-browser.packages.${pkgs.system}.default
-    pkgs-unstable.awww
-    pkgs-unstable.hyprlock
-    pkgs-unstable.hypridle
   ];
 
   ###################
@@ -385,8 +388,18 @@
       valkey = prev.valkey.overrideAttrs (oldAttrs: {
         doCheck = false;
       });
+      python313 = prev.python313.override {
+        packageOverrides = python-final: python-prev: {
+          aiocache = python-prev.aiocache.overrideAttrs (oldAttrs: {
+            doCheck = false;
+            doInstallCheck = false;
+          });
+        };
+      };
+      onetbb = prev.onetbb.overrideAttrs (oldAttrs: {
+        doCheck = false;
+      });
     })
-    inputs.nix-cachyos-kernel.overlays.pinned 
   ];
  
   system.activationScripts.flatpakSetup = ''

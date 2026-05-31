@@ -213,6 +213,7 @@ in
       "x-scheme-handler/about" = "helium.desktop";
       "x-scheme-handler/unknown" = "helium.desktop";
       "application/zip" = "org.gnome.Nautilus.desktop";
+      "application/pdf" = "onlyoffice-desktopeditors.desktop";
     };
   };
 

@@ -107,11 +107,13 @@
 
   programs.quartus.enable = true;
 
+  
   services.ollama = {
     enable = true;
     # Tell the service to use the specific Vulkan-enabled build
     package = pkgs-unstable.ollama-vulkan;
   };
+
 
    # Ensure the ollama user can access the hardware
   users.groups.render.members = [ "ollama" ];
