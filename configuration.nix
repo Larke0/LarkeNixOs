@@ -329,6 +329,7 @@
     gamemode
     protonup-qt
     xivlauncher
+    prismlauncher
 
     # Bluetooth
     bluez-tools
@@ -355,6 +356,7 @@
     awww
     hyprlock
     hypridle
+    gemini-cli
     (texlive.combine {
       inherit (texlive)
       scheme-medium
