@@ -362,6 +362,7 @@
     hypridle
     gemini-cli
     ddcutil
+    helvum
     (texlive.combine {
       inherit (texlive)
       scheme-medium
