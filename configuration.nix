@@ -360,7 +360,6 @@
     awww
     hyprlock
     hypridle
-    gemini-cli
     ddcutil
     qpwgraph
     (texlive.combine {
