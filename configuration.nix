@@ -312,6 +312,7 @@
     haruna
     mpv
     kdePackages.gwenview
+    stremio-linux-shell
 
     # Fetch
     fastfetch
@@ -329,11 +330,17 @@
     wineWow64Packages.staging
     winetricks
     lutris
-    obs-studio
+    (wrapOBS {
+      plugins = with obs-studio-plugins; [
+        obs-pipewire-audio-capture
+        obs-vkcapture
+      ];
+    })
     gamemode
     protonup-qt
     xivlauncher
     prismlauncher
+    heroic
 
     # Bluetooth
     bluez-tools
@@ -362,6 +369,12 @@
     hypridle
     ddcutil
     qpwgraph
+    gst_all_1.gstreamer
+    gst_all_1.gst-plugins-base
+    gst_all_1.gst-plugins-good
+    gst_all_1.gst-plugins-bad
+    gst_all_1.gst-plugins-ugly
+    gst_all_1.gst-vaapi
     (texlive.combine {
       inherit (texlive)
       scheme-medium
@@ -389,6 +402,11 @@
   ###################
   ### NIX         ###
   ###################
+  
+  environment.extraInit = ''
+    # Fixes OBS plugins missing on native Wayland/Hyprland sessions
+    export OBS_USE_EGL=1
+  '';
  
   nixpkgs.overlays = [ 
     (final: prev: {
