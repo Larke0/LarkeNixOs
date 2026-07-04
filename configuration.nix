@@ -185,6 +185,17 @@
   ###################
   ### PROGRAMS    ###
   ###################
+  
+  virtualisation.containers.enable = true;
+
+  # Enable Podman (For Distrobox)
+  virtualisation.podman = {
+    enable = true;
+    dockerCompat = true; # Maps the 'docker' command to podman, helpful for distrobox
+    defaultNetwork.settings.dns_enabled = true;
+  };
+  
+
 
   nixpkgs.config.allowUnfree = true;
 
