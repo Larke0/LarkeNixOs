@@ -279,6 +279,7 @@
     psmisc
     amdgpu_top
     file
+    distrobox
 
     # Shell
     starship
