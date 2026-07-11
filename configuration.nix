@@ -44,6 +44,11 @@
   security.tpm2.pkcs11.enable = true;
   security.tpm2.tctiEnvironment.enable = true;
 
+  services.logind = {
+    powerKey = "suspend";
+    powerKeyLongPress = "poweroff";
+  };
+
 
 
   ###################
@@ -203,6 +208,8 @@
     SUDO_EDITOR = "nvim";
     VISUAL = "nvim";
     EDITOR = "nvim";
+
+    GST_PLUGIN_SYSTEM_PATH_1_0 = "/run/current-system/sw/lib/gstreamer-1.0";
   };
 
 
@@ -291,6 +298,7 @@
     amdgpu_top
     file
     distrobox
+    firefox
 
     # Shell
     starship
@@ -395,7 +403,6 @@
      })
 
     # Coding
-    claude-code
     gh
   ]) ++ [
     inputs.helium.packages.${pkgs.system}.default
