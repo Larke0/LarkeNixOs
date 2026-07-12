@@ -45,8 +45,12 @@
   security.tpm2.tctiEnvironment.enable = true;
 
   services.logind = {
-    powerKey = "suspend";
-    powerKeyLongPress = "poweroff";
+    settings = {
+      Login = {
+        HandlePowerKey = "suspend";
+        HandlePowerKeyLongPress = "poweroff";
+      };
+    };
   };
 
 
@@ -217,7 +221,7 @@
     enable = true;
     remotePlay.openFirewall = true;
     dedicatedServer.openFirewall = true;
-    gamescopeSession.enable = true;
+    gamescopeSession.enable = false;
     extraCompatPackages = with pkgs; [
       proton-ge-bin
     ];
@@ -372,8 +376,26 @@
     # Virtualization
     virt-manager
     qemu
+
+    # Hardware & System Info
+    usbutils       # lsusb
+    pciutils       # lspci
+    lsof           # list open files
+    lm_sensors     # sensors (read CPU/motherboard temps)
+    dmidecode      # read hardware/BIOS info
+    sysstat        # iostat, mpstat (system performance metrics)
+    
+    # Network Diagnostics
+    dnsutils       # dig, nslookup
+    curl           # web requests (you have wget, but many scripts assume curl)
+    
+    # Archive Tools
+    unzip
+    zip
+    p7zip          # 7z archives
     
     # System utils
+    onlyoffice-desktopeditors
     easyeffects
     deepfilternet
     btop
@@ -381,7 +403,7 @@
     fd
     imagemagick
     yt-dlp
-    protonvpn-gui
+    proton-vpn
     wireguard-tools
     zathura
     awww
@@ -405,8 +427,8 @@
     # Coding
     gh
   ]) ++ [
-    inputs.helium.packages.${pkgs.system}.default
-    inputs.zen-browser.packages.${pkgs.system}.default
+    inputs.helium.packages.${pkgs.stdenv.hostPlatform.system}.default
+    inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 
   ###################
@@ -427,24 +449,7 @@
     export OBS_USE_EGL=1
   '';
  
-  nixpkgs.overlays = [ 
-    (final: prev: {
-      valkey = prev.valkey.overrideAttrs (oldAttrs: {
-        doCheck = false;
-      });
-      python313 = prev.python313.override {
-        packageOverrides = python-final: python-prev: {
-          aiocache = python-prev.aiocache.overrideAttrs (oldAttrs: {
-            doCheck = false;
-            doInstallCheck = false;
-          });
-        };
-      };
-      onetbb = prev.onetbb.overrideAttrs (oldAttrs: {
-        doCheck = false;
-      });
-    })
-  ];
+
  
   system.activationScripts.flatpakSetup = ''
     ${pkgs.flatpak}/bin/flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
@@ -453,10 +458,10 @@
 
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
-    substituters = [
+    extra-substituters = [
       "https://attic.xuyh0120.win/lantian"
     ];
-    trusted-public-keys = [
+    extra-trusted-public-keys = [
       "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
     ];
   };

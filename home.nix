@@ -35,6 +35,20 @@ let
     "image/tiff"
   ];
 
+  docTypes = [
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document" # .docx
+    "application/msword" # .doc
+    "application/vnd.oasis.opendocument.text" # .odt
+    "application/rtf" # .rtf
+  ];
+
+  sheetTypes = [
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" # .xlsx
+    "application/vnd.ms-excel" # .xls
+    "application/vnd.oasis.opendocument.spreadsheet" # .ods
+    "text/csv" # .csv
+  ];
+
   # Short helper alias for generating out-of-store symbolic links.
   # This tells Home Manager to link directly to your local repository rather than 
   # copying files into the immutable, read-only Nix store (/nix/store).
@@ -205,6 +219,8 @@ in
     # target properties mapping them all cleanly to specific viewer desktops.
     (lib.genAttrs videoTypes (_: "org.kde.haruna.desktop")) // # Maps all videoTypes to Haruna Media Player
     (lib.genAttrs imageTypes (_: "org.kde.gwenview.desktop")) // # Maps all imageTypes to Gwenview Image Viewer
+    (lib.genAttrs docTypes (_: "onlyoffice-desktopeditors.desktop")) //   # Maps all the doc types to Onlyoffice
+    (lib.genAttrs sheetTypes (_: "onlyoffice-desktopeditors.desktop")) // # Maps all the sheet types to Onlyoffice
     {
       "inode/directory" = "org.gnome.Nautilus.desktop";
       "text/plain" = "nvim-kitty.desktop";
@@ -243,6 +259,7 @@ in
   # don't create unorganized directories randomly inside the primary home directory.
   xdg.userDirs = {
     enable = true;
+    setSessionVariables = false;
     createDirectories = true;
     desktop     = "${config.home.homeDirectory}/Desktop";
     documents   = "${config.home.homeDirectory}/Documents";
@@ -309,7 +326,7 @@ in
         fixImagesQuality.enable = true;
         fixSpotifyEmbeds.enable = true;
         fixYoutubeEmbeds.enable = true;
-        friendsSince.enable = true;
+        #friendsSince.enable = true;
         fullSearchContext.enable = true;
         gameActivityToggle.enable = true;
         greetStickerPicker.enable = true;
@@ -317,7 +334,7 @@ in
         messageLogger.enable = true;
         noF1.enable = true;
         notificationVolume.enable = true;
-        OnePingPerDM.enable = true;
+        onePingPerDm.enable = true;
         openInApp.enable = true;
         silentTyping.enable = true;
         spotifyCrack.enable = true;
