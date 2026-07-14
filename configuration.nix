@@ -15,7 +15,7 @@
   boot.loader.systemd-boot.consoleMode = "max";
   boot.loader.efi.canTouchEfiVariables = true;
 
-  boot.kernelPackages = pkgs.linuxPackages_zen;
+  boot.kernelPackages = pkgs.linuxPackages;
  
   boot.plymouth = {
     enable = true;
@@ -32,7 +32,7 @@
     "rd.udev.log_level=3"
     "udev.log_priority=3"
     "video=1920x1080@60"
-    #"usbcore.autosuspend=-1"
+    "usbcore.autosuspend=-1"
     #"usbcore.old_scheme_first=1"
   ];
 
@@ -53,6 +53,11 @@
     };
   };
 
+
+  # Force audio driver to load before video driver to fix MacroSilicon capture card audio lockups
+  boot.extraModprobeConfig = ''
+    softdep uvcvideo pre: snd_usb_audio
+  '';
 
 
   ###################
@@ -450,7 +455,9 @@
           action.id == "org.freedesktop.login1.reboot" ||
           action.id == "org.freedesktop.login1.reboot-multiple-sessions" ||
           action.id == "org.freedesktop.login1.power-off" ||
-          action.id == "org.freedesktop.login1.power-off-multiple-sessions"
+          action.id == "org.freedesktop.login1.power-off-multiple-sessions" ||
+          action.id == "org.freedesktop.login1.suspend" ||
+          action.id == "org.freedesktop.login1.suspend-multiple-sessions"
         )
       ) {
         return polkit.Result.YES;
