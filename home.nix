@@ -110,7 +110,11 @@ in
     # Terminal shorthand commands mapped to long utilities
     shellAliases = {
       btw = "echo I use nixos, btw";
-      
+     
+
+      #Update the flake and rebuild
+      update = "sudo nix flake update --flake /etc/nixos && rebuild";
+
       # Rebuild and apply the entire system configuration profile from your local flake setup
       rebuild = "sudo nixos-rebuild switch --flake /etc/nixos#(hostname)";
       
@@ -322,7 +326,7 @@ in
         callTimer.enable = true;
         copyEmojiMarkdown.enable = true;
         crashHandler.enable = true;
-        disableCallIdle.enable = true;
+        disableCallIdle.enable = false;
         fixImagesQuality.enable = true;
         fixSpotifyEmbeds.enable = true;
         fixYoutubeEmbeds.enable = true;

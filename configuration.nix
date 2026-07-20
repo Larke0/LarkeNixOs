@@ -199,7 +199,9 @@
   ###################
   ### PROGRAMS    ###
   ###################
+ 
   
+
   virtualisation.containers.enable = true;
 
   # Enable Podman (For Distrobox)
@@ -230,6 +232,13 @@
     extraCompatPackages = with pkgs; [
       proton-ge-bin
     ];
+
+    package = pkgs.steam.override {
+      extraEnv = {
+        PROTON_ENABLE_WAYLAND = "1"; # Forces Proton to use Wayland natively
+        # RADV_PERFTEST = "gpl";     # AMD-specific Vulkan optimizations
+      };
+    };
   };
 
   services.flatpak.enable = true;
@@ -278,6 +287,7 @@
   # Proton-GE support
   environment.sessionVariables = {
     STEAM_EXTRA_COMPAT_TOOLS_PATHS = "~/.steam/root/compatibilitytools.d";
+    MANGOHUD = "1";
   };
 
   services.ananicy = {
