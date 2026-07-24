@@ -234,6 +234,7 @@
     ];
 
     package = pkgs.steam.override {
+      extraPkgs = pkgs: [ pkgs.directx-shader-compiler ];
       extraEnv = {
         PROTON_ENABLE_WAYLAND = "1"; # Forces Proton to use Wayland natively
         # RADV_PERFTEST = "gpl";     # AMD-specific Vulkan optimizations
