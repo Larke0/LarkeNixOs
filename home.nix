@@ -131,6 +131,26 @@ in
       
       # Wrapper to handle system-level Git updates inside the restricted /etc/nixos profile utilizing your secure user SSH keys
       ngit = "sudo GIT_SSH_COMMAND='ssh -i /home/larke/.ssh/id_ed25519' git -C /etc/nixos";
+
+      # Single command to add, commit, and push /etc/nixos changes
+      npush = ''
+          if test (count $argv) -eq 0
+              echo "Error: Please provide a commit message."
+              echo "Usage: npush \"Your commit message here\""
+              return 1
+          end
+          
+          ngit add -A
+          # $argv captures all the text you pass after the command
+          ngit commit -m "$argv"
+          ngit push
+      '';
+
+      # Single command to pull the latest /etc/nixos changes
+      npull = ''
+          echo "Pulling latest changes for /etc/nixos..."
+          ngit pull
+      '';
     };
   };
   
