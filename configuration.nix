@@ -99,6 +99,13 @@
     autoRepeatInterval = 35;
   };
 
+  # Disable High-Res Scrolling to fix double-scrolling in Wayland games
+  environment.etc."libinput/local-overrides.quirks".text = ''
+    [Disable High Res Scrolling]
+    MatchUdevType=mouse
+    AttrEventCode=-REL_WHEEL_HI_RES;-REL_HWHEEL_HI_RES;
+  '';
+
   programs.hyprland = {
     enable = true;
     #package = pkgs-unstable.hyprland;
