@@ -16,6 +16,17 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   boot.kernelPackages = pkgs.linuxPackages;
+
+  # Load v4l2loopback for virtual camera support
+  boot.extraModulePackages = with config.boot.kernelPackages; [ v4l2loopback ];
+  boot.kernelModules = [ "v4l2loopback" ];
+
+  # Configure virtual device creation
+  # exclusive_caps=1 ensures Chromium/Firefox/Discord pick it up cleanly
+  boot.extraModprobeConfig = ''
+    softdep uvcvideo pre: snd_usb_audio
+    options v4l2loopback exclusive_caps=1 card_label="Galaxy S24 Webcam"
+  '';
  
   boot.plymouth = {
     enable = true;
@@ -54,10 +65,6 @@
   };
 
 
-  # Force audio driver to load before video driver to fix MacroSilicon capture card audio lockups
-  boot.extraModprobeConfig = ''
-    softdep uvcvideo pre: snd_usb_audio
-  '';
 
 
   ###################
@@ -203,6 +210,19 @@
     };
   };
 
+  # Phone webcam stream bridge service
+  systemd.user.services.phone-webcam = {
+    description = "S24 IP Webcam Stream Bridge";
+    wantedBy = [ "default.target" ];
+    after = [ "network.target" ];
+    
+    serviceConfig = {
+      ExecStart = "${pkgs.ffmpeg}/bin/ffmpeg -i http://192.168.15.13:8080/video -vf format=yuv420p -f rawvideo -pix_fmt yuv420p -f v4l2 /dev/video0";
+      Restart = "always";
+      RestartSec = "5s";
+    };
+  };
+
   ###################
   ### PROGRAMS    ###
   ###################
@@ -313,6 +333,7 @@
     neovim
     wget
     git
+    ffmpeg
     kitty
     (rofi.override { plugins = [ rofi-calc ]; })
     libnotify
@@ -326,6 +347,7 @@
     file
     distrobox
     firefox
+    mullvad-browser
 
     # Shell
     starship
