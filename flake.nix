@@ -7,6 +7,10 @@
     nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=v0.7.0";
     hydra-launcher.url = "path:/etc/nixos/modules/hydra-launcher";
     nixcord.url = "github:FlameFlag/nixcord";
+    caelestia-shell = {
+      url = "github:caelestia-dots/shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     helium = {
       url = "github:AlvaroParker/helium-nix";
       inputs.nixpkgs.follows = "nixpkgs";

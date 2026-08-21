@@ -348,6 +348,7 @@
     distrobox
     firefox
     mullvad-browser
+    zenity
 
     # Shell
     starship

@@ -313,6 +313,7 @@ in
   imports = [
       inputs.nixcord.homeModules.nixcord          # Discord styling framework extension module
       inputs.spicetify-nix.homeManagerModules.default # Spotify custom optimization client expansion module
+      inputs.caelestia-shell.homeManagerModules.default
   ];
 
   # ---------------------------------------------------------------------------
@@ -340,7 +341,7 @@ in
       # Declarative Plugin Activation Engine Flags
       plugins = {
         betterGifPicker.enable = true;
-        favoriteGifSearch.enable = true;
+        #favoriteGifSearch.enable = true;
         gifPaste.enable = true;
         petpet.enable = true;
         imageZoom.enable = true;
@@ -407,4 +408,12 @@ in
       # Graphical styling template assignment selection
       theme = spicePkgs.themes.dribbblishDynamic;
   };
+
+  programs.caelestia = {
+    enable = true;
+    cli.enable = true;
+  };
 }
+
+
+
