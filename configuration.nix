@@ -188,9 +188,18 @@
   };
 
   security.pam.services.hyprlock = {
-      enableGnomeKeyring = true;
-    };
+    enableGnomeKeyring = true;
+  };
 
+  security.pam.services.caelestia = {
+    enableGnomeKeyring = true;
+  };
+  security.pam.services.caelestia-shell = {
+    enableGnomeKeyring = true;
+  };
+  security.pam.services.quickshell = {
+    enableGnomeKeyring = true;
+  };
   programs.fish.enable = true;
   users.users.larke.shell = pkgs.fish;
 
@@ -318,6 +327,8 @@
     MANGOHUD = "1";
   };
 
+  hardware.steam-hardware.enable = true;
+
   services.ananicy = {
     enable = true;
     package = pkgs.ananicy-cpp;
@@ -349,6 +360,7 @@
     firefox
     mullvad-browser
     zenity
+    unrar
 
     # Shell
     starship

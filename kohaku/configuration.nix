@@ -8,7 +8,7 @@
   # Gaming optimizations
   programs.gamemode = {
     enable = true;
-    enableRenice = true;
+    enableRenice = false;
     settings = {
       general = {
         renice = -10;
