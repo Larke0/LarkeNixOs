@@ -316,6 +316,8 @@
     enableNotifications = true; # Sends a desktop notification when a process is killed
   };
 
+  programs.gpu-screen-recorder.enable = true;
+
   ###################
   ### GAMING      ###
   ###################
@@ -361,6 +363,7 @@
     mullvad-browser
     zenity
     unrar
+    hicolor-icon-theme
 
     # Shell
     starship
