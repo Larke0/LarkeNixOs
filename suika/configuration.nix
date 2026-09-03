@@ -77,6 +77,10 @@
 
       SOUND_POWER_SAVE_ON_BAT = 1;
       SOUND_POWER_SAVE_ON_AC = 0;
+      
+      #Exclude touchpad
+      USB_DENYLIST = "048d:c966";
+  
     };
   };
 
