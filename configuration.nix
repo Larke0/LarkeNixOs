@@ -262,6 +262,7 @@
 
   programs.steam = {
     enable = true;
+    protontricks.enable = true;
     remotePlay.openFirewall = true;
     dedicatedServer.openFirewall = true;
     gamescopeSession.enable = false;
@@ -415,17 +416,16 @@
     wineWow64Packages.staging
     winetricks
     lutris
-    (wrapOBS {
-      plugins = with obs-studio-plugins; [
-        obs-pipewire-audio-capture
-        obs-vkcapture
-      ];
-    })
     gamemode
     protonup-qt
     xivlauncher
     prismlauncher
     heroic
+    (wrapOBS {
+      plugins = with pkgs.obs-studio-plugins; [
+        obs-pipewire-audio-capture
+      ];
+    })
 
     # Bluetooth
     bluez-tools

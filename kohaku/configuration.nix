@@ -147,4 +147,22 @@
       };
     };
   };
+
+  # local llm
+  virtualisation.oci-containers = {
+    backend = "podman";
+    containers.lemonade-server = {
+      image = "ghcr.io/lemonade-sdk/lemonade-server:latest";
+      ports = [ "13305:13305" ];
+      volumes = [ "lemonade-models:/opt/lemonade/.cache/lemonade" ];
+      autoStart = true;
+      
+      extraOptions = [
+        # AMD ROCm Compute & Display Devices
+        "--device=/dev/kfd"
+        "--device=/dev/dri"
+        "--security-opt=seccomp=unconfined"
+      ];
+    };
+  };
 }
