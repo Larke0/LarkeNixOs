@@ -165,6 +165,17 @@
     };
   };
 
+  systemd.user.services.joystickwake = {
+    description = "Joystickwake Daemon";
+    after = [ "graphical-session.target" ];
+    partOf = [ "graphical-session.target" ];
+    wantedBy = [ "graphical-session.target" ];
+    serviceConfig = {
+      ExecStart = "${pkgs.joystickwake}/bin/joystickwake";
+      Restart = "on-failure";
+    };
+  };
+
   ###################
   ### BLUETOOTH   ###
   ###################
@@ -181,7 +192,7 @@
 
   users.users.larke = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" "i2c" "video"];
+    extraGroups = [ "wheel" "networkmanager" "i2c" "video" "input"];
     packages = with pkgs; [
       tree
     ];
@@ -365,6 +376,7 @@
     zenity
     unrar
     hicolor-icon-theme
+    joystickwake
 
     # Shell
     starship

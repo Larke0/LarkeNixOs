@@ -250,10 +250,10 @@ in
     {
       "inode/directory" = "org.gnome.Nautilus.desktop";
       "text/plain" = "nvim-kitty.desktop";
-      "x-scheme-handler/http" = "helium.desktop";
-      "x-scheme-handler/https" = "helium.desktop";
-      "x-scheme-handler/about" = "helium.desktop";
-      "x-scheme-handler/unknown" = "helium.desktop";
+      "x-scheme-handler/http" = "zen.desktop";
+      "x-scheme-handler/https" = "zen.desktop";
+      "x-scheme-handler/about" = "zen.desktop";
+      "x-scheme-handler/unknown" = "zen.desktop";
       "application/zip" = "org.gnome.Nautilus.desktop";
       "application/pdf" = "onlyoffice-desktopeditors.desktop";
     };
