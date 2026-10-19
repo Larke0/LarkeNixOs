@@ -250,7 +250,7 @@
   ### PROGRAMS    ###
   ###################
  
-  services.ratbagd.enable = true
+  services.ratbagd.enable = true;
 
   virtualisation.containers.enable = true;
 
