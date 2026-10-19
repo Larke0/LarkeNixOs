@@ -132,6 +132,9 @@
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
+    extraPackages = with pkgs; [
+        rocmPackages.clr.icd
+      ];
   };
 
   hardware.i2c.enable = true;
@@ -284,7 +287,7 @@
     package = pkgs.steam.override {
       extraPkgs = pkgs: [ pkgs.directx-shader-compiler ];
       extraEnv = {
-        PROTON_ENABLE_WAYLAND = "1"; # Forces Proton to use Wayland natively
+        # PROTON_ENABLE_WAYLAND = "1"; # Forces Proton to use Wayland natively
         # RADV_PERFTEST = "gpl";     # AMD-specific Vulkan optimizations
       };
     };
@@ -328,7 +331,9 @@
     enableNotifications = true; # Sends a desktop notification when a process is killed
   };
 
-  programs.gpu-screen-recorder.enable = true;
+  programs.gpu-screen-recorder = {
+    enable = true;
+  };
 
   ###################
   ### GAMING      ###
@@ -411,6 +416,7 @@
     mpv
     kdePackages.gwenview
     stremio-linux-shell
+    davinci-resolve
 
     # Fetch
     fastfetch
@@ -501,7 +507,7 @@
     gh
   ]) ++ [
     inputs.helium.packages.${pkgs.stdenv.hostPlatform.system}.default
-    inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
+    inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.twilight
   ];
 
   ###################
@@ -548,12 +554,6 @@
 
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
-    extra-substituters = [
-      "https://attic.xuyh0120.win/lantian"
-    ];
-    extra-trusted-public-keys = [
-      "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
-    ];
   };
 
 
@@ -570,5 +570,5 @@
 
 
 
-  system.stateVersion = "25.11";
+  system.stateVersion = "26.05";
 }

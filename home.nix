@@ -136,7 +136,7 @@ in
       update = "sudo nix flake update --flake /etc/nixos && rebuild";
 
       # Rebuild and apply the entire system configuration profile from your local flake setup
-      rebuild = "sudo nixos-rebuild switch --flake /etc/nixos#(hostname)";
+      rebuild = "sudo nixos-rebuild switch --flake /etc/nixos#(hostname) --fallback";
       
       # Execute custom theme-compliant wallpaper daemon script
       set-wallpaper = "~/.config/quickshell/scripts/set-wallpaper.sh";
@@ -147,8 +147,9 @@ in
       # Stages all untracked file changes inside dotfiles directory, commits, and pushes them safely to GitHub
       push-dots = "cd ~/Larke-shell && git add -A && git commit -m 'update dots' && git push";
       
-      zen-browser = "zen";
-      
+      zen-browser = "zen-twilight";
+      zen = "zen-twilight";
+
       # Wrapper to handle system-level Git updates inside the restricted /etc/nixos profile utilizing your secure user SSH keys
       ngit = "sudo GIT_SSH_COMMAND='ssh -i /home/larke/.ssh/id_ed25519' git -C /etc/nixos";
 
