@@ -251,10 +251,10 @@ in
     {
       "inode/directory" = "org.gnome.Nautilus.desktop";
       "text/plain" = "nvim-kitty.desktop";
-      "x-scheme-handler/http" = "zen.desktop";
-      "x-scheme-handler/https" = "zen.desktop";
-      "x-scheme-handler/about" = "zen.desktop";
-      "x-scheme-handler/unknown" = "zen.desktop";
+      "x-scheme-handler/http" = "zen-twilight.desktop";
+      "x-scheme-handler/https" = "zen-twilight.desktop";
+      "x-scheme-handler/about" = "zen-twilight.desktop";
+      "x-scheme-handler/unknown" = "zen-twilight.desktop";
       "application/zip" = "org.gnome.Nautilus.desktop";
       "application/pdf" = "onlyoffice-desktopeditors.desktop";
     };
@@ -413,6 +413,17 @@ in
   programs.caelestia = {
     enable = true;
     cli.enable = true;
+  };
+
+
+  # Make xivlauncher open ffxiv in wayland instead of xwayland
+  xdg.desktopEntries.xivlauncher = {
+    name = "XIVLauncher Core";
+    exec = "env -u DISPLAY WINEEXTRAENV=Graphics=x11,wayland XIVLauncher.Core %u";
+    icon = "xivlauncher";
+    type = "Application";
+    categories = [ "Game" ];
+    terminal = false;
   };
 }
 
