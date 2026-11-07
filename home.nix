@@ -416,16 +416,7 @@ in
   };
 
 
-  # Make xivlauncher open ffxiv in wayland instead of xwayland
-  xdg.desktopEntries.xivlauncher = {
-    name = "XIVLauncher Core";
-    exec = "env -u DISPLAY WINEEXTRAENV=Graphics=x11,wayland XIVLauncher.Core %u";
-    icon = "xivlauncher";
-    type = "Application";
-    categories = [ "Game" ];
-    terminal = false;
-  };
-}
+ }
 
 
 
